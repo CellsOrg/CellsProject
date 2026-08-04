@@ -1,6 +1,8 @@
-<table align="center"><tr><td>
+<table align="center">
+<tr>
+<td>
 
-```
+```text
    _--_     _--_    _--_     _--_     _--_     _--_     _--_     _--_
   (    )~~~(    )  (    )~~~(    )   (    )~~~(    )   (    )~~~(    )
    \           /    \           /     \           /     \           /
@@ -17,74 +19,115 @@
     /   !   /         !   !  `.    / /      `-_   `-/  /    !   !
    !   /__ /___       /  /__   \__/ (  \---__/ `-_    /     /  /__
    (______)____)     (______)        \__)         `-_/     (______)
-
-   
-                                                      
 ```
 
-</td></tr></table>
+</td>
+</tr>
+</table>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Salesforce-00A1E0?logo=salesforce&logoColor=white" />
-  <img src="https://img.shields.io/badge/LWC-0176D3?logo=salesforce&logoColor=white" />
-  <img src="https://img.shields.io/badge/Apex-1798C1?logo=salesforce&logoColor=white" />
-  <img src="https://img.shields.io/badge/HTML-E34F26?logo=html5&logoColor=white" />
-  <img src="https://img.shields.io/badge/CSS-1572B6?logo=css3&logoColor=white" />
-  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black" />
-</p>
+# Cell — Salesforce Customer 360
 
-# Project Tongss
-
-Project Tongss is a Salesforce CRM project inspired by the T0$$ user experience.
-
-It connects a modern customer-facing web application with Salesforce, allowing customer interactions to flow seamlessly into CRM. The project demonstrates how a frontend application and Salesforce can work together through a clean architecture focused on usability, maintainability, and scalability.
+> Customer 360 project for Tongss Place  
+> Built with Salesforce, Agentforce, Flow, Apex, and Slack Integration.
 
 ---
 
-## Key Features
+## 📖 Overview
 
-- 🏦 T0$$-inspired customer experience
-- ☁️ Salesforce CRM integration
-- 👤 Customer & Account management
-- 📦 Product and Order management
-- 📋 Case & Service workflows
-- ⚡ Apex business logic
-- 🧩 Lightning Web Components (LWC)
-- 🎨 Shared Design System
-- 🔗 Frontend ↔ Salesforce integration
+**Cell** is a Salesforce Customer 360 project for **Tongss Place**.
+
+The goal is to help sales representatives identify high-potential stores by combining customer support history, POS usage, and operational insights into a single Salesforce Org.
+
+Instead of making random cold calls, sales representatives receive AI-assisted recommendations every morning through Slack.
 
 ---
 
-##  Architecture
+## ✨ Key Features
 
-```mermaid
-flowchart TD
-    A[👤 Customer]
+- Customer 360 Record Page
+- Salesforce Flow Automation
+- Agentforce Recommendation
+- Slack Notification Integration
+- POS Usage Analytics
+- CS Ticket Management
+- Sales Opportunity Management
+- Tongss Step Summary
 
-    B["🌐 Tongss Web App<br/>HTML · CSS · JavaScript"]
+---
 
-    C["☁️ Salesforce Org<br/>LWC · Apex · Flow"]
+## 🏗️ Architecture
 
-    D[(Customer)]
-    E[(Orders)]
-    F[(Products)]
-    G[(Cases)]
-    H[(Reports)]
-    I[(CRM Data)]
-
-    A --> B
-    B --> C
-
-    C --> D
-    C --> E
-    C --> F
-    C --> G
-    C --> H
-    C --> I
+```text
+POS
+        │
+CS
+        │
+Tongss Step
+        │
+        ▼
+Customer 360 (Salesforce)
+        │
+        ▼
+Flow Automation
+        │
+        ▼
+Recommendation
+        │
+        ▼
+Agentforce
+        │
+        ▼
+Slack
+        │
+        ▼
+Sales Representative
 ```
 
 ---
 
-## Contributor
+## 📂 Documentation
 
+| Document | Description |
+|----------|-------------|
+| `00_PRODUCT_GUIDE.md` | Product vision and scope |
+| `01_PERSONAS.md` | User personas |
+| `02_USER_FLOW.md` | User journey |
+| `03_PROJECT_GUIDE.md` | Team guide |
+| `04_DATA_MODEL.md` | Business objects & fields |
+| `05_SYSTEM_ARCHITECTURE.md` | System architecture |
+| `06_OBJECT_ERD.md` | Object relationships |
+| `07_PROCESS_DIAGRAM.md` | Business process |
+| `08_SCREEN_SPEC.md` | Screen specification |
+| `09_PROJECT_TREE.md` | Repository structure |
+| `10_DECISIONS.md` | ADR & decision log |
 
+---
+
+## 🛠 Tech Stack
+
+- Salesforce
+- Agentforce
+- Apex
+- Flow
+- Lightning App Builder
+- Lightning Web Components (LWC)
+- Slack API
+- External Credential
+
+---
+
+## 👥 Contributors
+
+| Name | Role |
+|------|------|
+| Sara | PM / Product Owner |
+| 승우 | Salesforce Admin Lead |
+| 은영 | Developer Lead |
+| 혜준 | Platform & QA Lead |
+| 아론 | Demo Lead |
+
+---
+
+## 📄 License
+
+This project was created for educational and portfolio purposes.
