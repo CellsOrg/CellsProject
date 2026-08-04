@@ -57,30 +57,37 @@ Instead of making random cold calls, sales representatives receive AI-assisted r
 
 ## 🏗️ Architecture
 
-```text
-POS
-        │
-CS
-        │
-Tongss Step
-        │
-        ▼
-Customer 360 (Salesforce)
-        │
-        ▼
-Flow Automation
-        │
-        ▼
-Recommendation
-        │
-        ▼
-Agentforce
-        │
-        ▼
-Slack
-        │
-        ▼
-Sales Representative
+```mermaid
+flowchart TB
+
+    subgraph External["External Systems"]
+        POS["POS System"]
+        CS["CS Management"]
+        STEP["Tongss Step"]
+    end
+
+    subgraph SF["Customer 360 (Salesforce)"]
+        ACCOUNT["Store (Account)"]
+        CASE["CS Ticket (Case)"]
+        FLOW["Flow Automation"]
+        REC["Recommendation"]
+    end
+
+    AGENT["Agentforce"]
+    SLACK["Slack"]
+    SALES["Sales Representative"]
+
+    POS --> ACCOUNT
+    CS --> CASE
+    STEP --> ACCOUNT
+
+    ACCOUNT --> FLOW
+    CASE --> FLOW
+    FLOW --> REC
+
+    REC --> AGENT
+    AGENT --> SLACK
+    SLACK --> SALES
 ```
 
 ---
