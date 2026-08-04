@@ -30,8 +30,9 @@ Cell이 다루는 도메인은 크게 세 축이다.
 - **Sales 데이터** — Store에 대한 영업 활동과 결과 (Sales Activity), 그리고 그 활동을 만들어내는
   판단 근거(Recommendation)와 신사업(Tongss Step) 도입 현황(Step Summary)
 
-이 세 축이 지금까지는 서로 다른 시스템(Sales만 Salesforce, CS는 별도 시스템, Tongss Step은 외부
-시스템)에 흩어져 있었다. Customer 360의 데이터 모델은 이 세 축을 **Store(Account) 하나를 중심으로**
+Tongss Place는 지금까지 이 세 축을 관리할 CRM이 없었다 — Sales는 개인 엑셀·메모장, CS는 전화 상담
+기록, Tongss Step의 운영 데이터는 아직 Salesforce와 연결되지 않은 상태로 각자 흩어져 있었다
+(`00_PRODUCT_GUIDE.md` §1). Customer 360의 데이터 모델은 이 세 축을 **Store(Account) 하나를 중심으로**
 묶어, "이 매장이 지금 어떤 상태인가"를 한 화면에서 볼 수 있게 만드는 것이 목적이다.
 
 **프로젝트 철학과 데이터 모델의 관계:**
@@ -39,9 +40,11 @@ Cell이 다루는 도메인은 크게 세 축이다.
 - **Customer 360 중심** — 모든 커스텀 오브젝트는 Store(Account)를 Lookup으로 가진다. Store 없이 존재하는 데이터는 없다.
 - **Declarative First / Standard Object 우선** — 표준 오브젝트(Account/Case/Opportunity)로 표현 가능한 것은
   절대 새 오브젝트를 만들지 않는다. §4, §6 참조.
-- **Tongss Solution은 외부 시스템, Summary만 들어온다** — Tongss Step 앱의 내부 동작(체크리스트 진행,
-  학습 콘텐츠 등)은 Salesforce가 알 필요가 없다. Salesforce는 그 결과 요약(Step Summary)만 받는다.
-  이 원칙 때문에 Step Summary는 필드 수가 적고 전부 "요약값"이다 — §5.5 참조.
+- **Tongss Step MVP는 우리가 만들지만, Summary만 들어온다** — Tongss Step MVP(체크리스트·직원 관리·교육
+  현황 등, Sara 구현 — `00_PRODUCT_GUIDE.md` §3.5)는 Salesforce Org 밖의 별도 앱이다. 우리가 직접 만드는
+  앱이라도 그 내부 동작(체크리스트 항목별 상세, 학습 콘텐츠 진행률 등)까지 Salesforce로 보내지 않고,
+  결과 요약(Step Summary)만 보내도록 **의도적으로** 설계했다. 이 원칙 때문에 Step Summary는 필드 수가
+  적고 전부 "요약값"이다 — §5.5 참조.
 
 ---
 
@@ -91,7 +94,7 @@ flowchart TB
 | POS Usage | 매장의 일별 POS 매출·사용 지표 | `POS_Usage__c` (커스텀) |
 | CS Ticket | 매장이 접수한 CS 문의/장애 1건 | Case (표준) |
 | Sales Activity | 매장에 대한 영업 활동 1건(Lead 발굴~Closed) | Opportunity (표준) |
-| Step Summary | 매장의 Tongss Step 앱 활용 현황 요약(외부 시스템 Summary) | `Step_Summary__c` (커스텀) |
+| Step Summary | 매장의 Tongss Step MVP 활용 현황 요약(별도 앱에서 Summary만 수신) | `Step_Summary__c` (커스텀) |
 | Recommendation | "이 매장에 지금 연락해야 하는 이유"를 담은 추천 1건 | `Recommendation__c` (커스텀) |
 
 > 이 6개가 `CLAUDE.md`의 Business Object 매핑 표와 1:1로 대응하는 전부다. `07_PROCESS_DIAGRAM.md`의
@@ -108,7 +111,7 @@ flowchart TB
 | CS Ticket | `Case` | 표준 | `Store`는 Case 표준 필드 `AccountId`로 이미 존재 |
 | Sales Activity | `Opportunity` | 표준 | `Store`는 Opportunity 표준 필드 `AccountId`로 이미 존재, `Stage`는 `StageName` 표준 필드의 값만 커스터마이즈 |
 | POS Usage | `POS_Usage__c` | 커스텀 | 표준 오브젝트로 표현 불가(일별 시계열 지표) |
-| Step Summary | `Step_Summary__c` | 커스텀 | 외부 시스템 요약 저장용, 표준 오브젝트 없음 |
+| Step Summary | `Step_Summary__c` | 커스텀 | Tongss Step MVP(별도 앱) 요약 저장용, 표준 오브젝트 없음 |
 | Recommendation | `Recommendation__c` | 커스텀 | Salesforce에 이 개념에 대응하는 표준 오브젝트 없음(Lead와도 다름 — Store는 이미 Account로 존재하므로 Lead 전환이 아니라 "기존 Account에 대한 추천"임) |
 
 > 이 표는 `CLAUDE.md`의 Business Object 매핑 표와 동일한 6개만 다룬다. Task(Follow-up)는 Business
@@ -188,7 +191,8 @@ flowchart TB
 
 ### 5.5 Step Summary (`Step_Summary__c`, 커스텀)
 
-Tongss Step 앱(외부 시스템)에서 넘어오는 요약값만 담는다 — "Summary만 들어온다" 원칙(§1). 매장당 최신 1건.
+Tongss Step MVP(Salesforce Org 밖의 별도 앱, Sara 구현 — `00_PRODUCT_GUIDE.md` §3.5)에서 넘어오는
+요약값만 담는다 — "Summary만 들어온다" 원칙(§1). 매장당 최신 1건.
 
 | Field API Name | Label | Type | 필수 | 설명 |
 |---|---|---|---|---|
@@ -196,10 +200,12 @@ Tongss Step 앱(외부 시스템)에서 넘어오는 요약값만 담는다 — 
 | `Learning_Rate__c` | Learning Rate | Percent(5,2) | N | 직원 교육 콘텐츠 학습 완료율 |
 | `Checklist_Rate__c` | Checklist Rate | Percent(5,2) | N | 운영 체크리스트 완료율 |
 | `Active_Users__c` | Active Users | Number(5,0) | N | Step 앱 활성 사용자 수 |
-| `Last_Sync_Date__c` | Last Sync Date | DateTime | Y | Tongss Solution과 마지막 동기화 시각 |
+| `Last_Sync_Date__c` | Last Sync Date | DateTime | Y | Tongss Step MVP와 마지막 동기화 시각 |
 
-> 이 오브젝트에 없는 필드(체크리스트 항목별 상세, 학습 콘텐츠별 진행률 등)는 Tongss Step 앱 내부
-> 데이터이며 Salesforce로 들어오지 않는다 — `project-tongss` 레포 소관, 이 프로젝트에서 참조하지 않는다.
+> 이 오브젝트에 없는 필드(체크리스트 항목별 상세, 학습 콘텐츠별 진행률 등)는 Tongss Step MVP 안에만
+> 남기고 Salesforce로 보내지 않는다 — 우리가 그 앱을 직접 만들더라도 의도적으로 이렇게 설계했다("Summary만
+> 들어온다" 원칙, §1). Tongss Step MVP 자체의 화면·기능 설계는 이 문서가 아니라 `00_PRODUCT_GUIDE.md`
+> §3.5·§4.1, 담당은 `members/00_SARA.md` 참조.
 
 ### 5.6 Recommendation (`Recommendation__c`, 커스텀)
 
@@ -283,7 +289,7 @@ Business Object 집계(위 21개)에는 포함하지 않는다 — Task는 새 �
 | `POS_Usage__c` | Business Object | 승우 (Admin Lead) | 외부 POS 시스템 Inbound(Import) — `05_SYSTEM_ARCHITECTURE.md` |
 | Case (CS Ticket) | Business Object | 승우 (Admin Lead) | CS 상담원이 Salesforce에서 직접 생성(더 이상 별도 CS 시스템 아님) |
 | Opportunity (Sales Activity) | Business Object | 승우 (Admin Lead) | 박세일즈 역할 사용자가 직접 생성/갱신, 일부는 Recommendation Accepted 시 Flow가 생성 |
-| `Step_Summary__c` | Business Object | 승우 (Admin Lead), 연동은 은영 (Developer Lead) | Tongss Solution(외부) Inbound Summary — `05_SYSTEM_ARCHITECTURE.md` |
+| `Step_Summary__c` | Business Object | 승우 (Admin Lead), 연동은 은영 (Developer Lead) | Tongss Step MVP(Sara 구현)에서 생성된 운영 데이터를 은영이 REST API로 수신해 upsert — `05_SYSTEM_ARCHITECTURE.md` §3.3 |
 | `Recommendation__c` | Business Object | 승우 (Admin Lead) | Flow(반복 조건 충족 시 자동 생성) — `07_PROCESS_DIAGRAM.md`. Agentforce는 생성하지 않고 읽기만 한다 — `05_SYSTEM_ARCHITECTURE.md` §3.5 |
 | Task (Follow-up) | Supporting Standard Object | 승우 (Admin Lead) | Flow(Opportunity Stage 변경 시 자동 생성) |
 

@@ -2,7 +2,9 @@
 
 > 이 문서는 "데이터가 어디서 오고 어디로 가는가"를 다룹니다. Object/Field 자체는 `04_DATA_MODEL.md`(유일한
 > 진실), Object 간 관계는 `06_OBJECT_ERD.md`, 자동화의 상세 단계는 `07_PROCESS_DIAGRAM.md`를 참조합니다.
-> Tongss Step 앱(TongssApp) 내부 구현은 다루지 않습니다 — `project-tongss` 레포 소관, `CLAUDE.md` 참조.
+> Tongss Step MVP는 이 프로젝트에서 Sara가 구현하지만(`00_PRODUCT_GUIDE.md` §3.5), 그 화면·기능 자체의
+> 상세 설계는 이 문서가 아니라 `00_PRODUCT_GUIDE.md`가 다룹니다 — 이 문서는 "Salesforce가 그 앱으로부터
+> 무엇을 받는가"까지만 다룹니다.
 
 > **처음 보는 용어?** 이 문서에는 Salesforce 용어가 자주 나옵니다. 미리 정리했습니다.
 >
@@ -26,7 +28,7 @@ Cell이 다루는 시스템은 6개다. 이 중 **Customer 360(Salesforce Org)�
 |---|---|---|
 | POS | 외부 — Tongss Place 매장의 결제 단말기/POS 시스템 | Inbound만 (POS Usage 전송) |
 | CS | **이 프로젝트로 Salesforce에 흡수됨** — 더 이상 별도 시스템 아님 | 없음(§3 참조 — CS 상담원이 Salesforce를 직접 사용) |
-| Tongss Solution | 외부 — Tongss Step 앱(`project-tongss` 레포, 이 프로젝트에서 만들지 않음) | Inbound만, **Summary만** (Step Summary 전송) |
+| Tongss Step MVP | Salesforce Org 밖의 별도 앱 — **이 프로젝트에서 구현**(담당 Sara, `00_PRODUCT_GUIDE.md` §3.5·§4.1) | Inbound만, **Summary만** (Step Summary 전송) |
 | Slack | 외부 — 팀/개인 알림 채널 | Outbound만 (Recommendation 알림 전송) |
 | Agentforce | Salesforce Org 내부 기능(외부 시스템 아님) | Customer 360 + `Recommendation__c` 데이터를 **읽어서** 자연어 질의/추천 설명/영업 지원 수행. `Recommendation__c`를 생성하지 않는다 — §2, §3.5 |
 | Customer 360 | **중심** — Salesforce Org (Account/Case/Opportunity + 커스텀 3종) | - |
@@ -42,7 +44,7 @@ Agentforce가 Recommendation을 만드는 것이 아니다.
 ```mermaid
 flowchart TB
     POS["POS<br/><small>외부 시스템</small>"]
-    TS["Tongss Solution<br/><small>외부 시스템 · Tongss Step 앱</small>"]
+    TS["Tongss Step MVP<br/><small>별도 앱 · 이 프로젝트에서 구현(Sara)</small>"]
     CSU["CS 상담원<br/><small>Salesforce 사용자</small>"]
 
     subgraph C360["Customer 360 — Salesforce Org"]
@@ -97,9 +99,11 @@ flowchart TB
 
 ### 3.2 CS — 별도 시스템이 아니라 Salesforce로 흡수됨
 
-`CLAUDE.md`가 말하는 이 프로젝트의 핵심이 여기다: "현재 Sales만 Salesforce 사용, CS는 별도 시스템 —
-이 둘을 하나의 Org로 통합한다." 즉 CS는 Customer 360에 데이터를 보내는 **외부 시스템이 아니라**,
-프로젝트 완료 후에는 CS 상담원이 Salesforce에 **직접 로그인해서 Case를 생성·처리하는 사용자**가 된다.
+`CLAUDE.md`가 말하는 이 프로젝트의 핵심이 여기다: "Tongss Place는 아직 CRM을 쓰지 않는다 — 영업·CS·
+운영 데이터가 여러 곳에 흩어져 있다. Salesforce(Customer 360)를 신규 도입해 하나의 Org로 통합한다."
+즉 CS는 Customer 360에 데이터를 보내는 **외부 시스템이 아니라**, 애초에 전담 시스템이 없던 업무이고
+(`00_PRODUCT_GUIDE.md` §3.3), 프로젝트 완료 후에는 CS 상담원이 Salesforce에 **직접 로그인해서 Case를
+생성·처리하는 사용자**가 된다.
 
 - Inbound 연동 없음, Outbound 연동 없음
 - 인증: Salesforce 표준 로그인(사용자 계정), CS 상담원용 Permission Set(사용자가 어떤 데이터에 접근할
@@ -107,16 +111,20 @@ flowchart TB
 - 기존 CS 시스템의 과거 데이터를 이관해야 한다면 이는 별도의 1회성 Data Migration이며, 상시 Integration
   Point가 아니다 — 필요 여부는 Sara 확인 후 `10_DECISIONS.md`에 기록
 
-### 3.3 Tongss Solution — Inbound만, Summary만
+### 3.3 Tongss Step MVP — Inbound만, Summary만 (우리가 만들지만 원칙은 그대로)
 
 - **보내는 데이터:** `Step_Summary__c` 뿐 (`04_DATA_MODEL.md` §5.5) — LearningRate, ChecklistRate,
   ActiveUsers, LastSyncDate. 체크리스트 개별 항목, 학습 콘텐츠 상세 등 원본 데이터는 넘어오지 않는다.
-- **주기:** 배치(API), 매장당 최신 요약을 upsert(같은 매장 레코드가 있으면 갱신, 없으면 새로 생성 —
-  1:1, `04_DATA_MODEL.md` §2)
-- **왜 Summary만인가:** 프로젝트 철학 "Tongss Solution은 외부 시스템" — Salesforce는 Step 앱의 운영
-  방식을 알 필요가 없고, "이 매장이 Step을 얼마나 잘 쓰고 있는가"라는 결과만 필요하다.
-- **인증/API 상세:** Tongss Step 앱 쪽 스펙은 `project-tongss` 레포 소관. 이 문서는 Integration Point의
-  존재와 방향(Inbound, Summary)만 정의하고, 구체적 인증 방식(API Key/OAuth 등)은 임의로 확정하지 않는다.
+- **주기:** 배치(REST API), 매장당 최신 요약을 upsert(같은 매장 레코드가 있으면 갱신, 없으면 새로 생성
+  — 1:1, `04_DATA_MODEL.md` §2)
+- **왜 Summary만인가:** Tongss Step MVP는 이 프로젝트에서 우리가 직접 만드는 앱이지만(Sara 담당,
+  `00_PRODUCT_GUIDE.md` §3.5), Salesforce Org와는 별개의 앱으로 남긴다. Salesforce는 그 앱의 운영
+  방식을 알 필요가 없고, "이 매장이 Step을 얼마나 잘 쓰고 있는가"라는 결과만 필요하다는 원칙은 우리가
+  직접 만들더라도 그대로 유지한다 — 이 원칙을 지켜야 Customer 360의 스키마가 Tongss Step MVP 화면이
+  바뀔 때마다 함께 흔들리지 않는다.
+- **인증/API 상세:** Tongss Step MVP → Salesforce REST API 연동은 은영(Developer Lead)이 구현한다
+  (`members/02_EUNYOUNG.md`). 구체적 인증 방식(토큰 등)은 이 문서에서 미리 확정하지 않는다 — 구현
+  시점에 은영·승우가 정하고 `10_DECISIONS.md`에 기록한다.
 
 ### 3.4 Slack — Outbound만
 
@@ -153,7 +161,7 @@ flowchart TB
 |---|---|---|---|---|---|
 | 1 | POS → Salesforce | Inbound | `POS_Usage__c` | 데모: 없음(CSV Import) / 실연동: 미확정 | 아론(데모), 승우(Import) |
 | 2 | CS 상담원 → Salesforce | 직접 사용(연동 아님) | `Case` | Salesforce 표준 로그인 | 혜준(Permission) |
-| 3 | Tongss Solution → Salesforce | Inbound (Summary만) | `Step_Summary__c` | 미확정(`project-tongss` 소관) | 은영(연동 개발), 승우(Object) |
+| 3 | Tongss Step MVP → Salesforce | Inbound (Summary만) | `Step_Summary__c` | REST API, 인증 방식은 구현 시점에 확정 | 은영(연동 개발), 승우(Object), Sara(Tongss Step MVP) |
 | 4 | Salesforce → Slack | Outbound | `Recommendation__c` (읽기) | External Credential(Bot Token) | 은영 |
 | 5 | Agentforce ↔ Salesforce (읽기 전용) | 내부 | `Account`/`Case`/`Opportunity`/`Recommendation__c` | Org 내부(별도 인증 없음) | 승우, 은영 |
 
@@ -170,7 +178,7 @@ Apex가 필요한 지점은 명확히 좁다.
 | Case/Opportunity 내부 자동화 (생성, Wrong Usage 체크, **`Recommendation__c` 생성**, Task 생성) | **Flow** | Org 내부 레코드 간 로직은 선언적으로 충분히 표현됨 — `07_PROCESS_DIAGRAM.md`. **Agentforce가 아니라 Flow가 생성한다.** |
 | `Recommendation__c` 자연어 설명 / 질의 응답 / 영업 제안 | **Agentforce** (Prompt Builder 기본, 필요 시 Apex Action) | 이미 저장된 데이터를 자연어로 풀어내는 것은 Flow의 역할이 아니라 AI 레이어의 역할 |
 | Slack Outbound 호출 | **Apex** (Flow가 Invocable Apex Action 호출) | HTTP 콜아웃 + External Credential 인증 처리는 Flow 단독으로 다루기 어려움. 메시지 문구는 Agentforce가 구성 |
-| Tongss Solution Inbound 수신 처리 (필요 시) | **Apex** (배치/REST 수신 후 `Step_Summary__c` upsert) | 외부 API 페이로드 파싱은 Flow보다 Apex가 안정적 |
+| Tongss Step MVP Inbound 수신 처리 | **Apex**(REST API 수신 후 `Step_Summary__c` upsert) | 외부 API 페이로드 파싱은 Flow보다 Apex가 안정적 |
 | Customer 360 Record Page(매장 하나의 정보를 모아 보여주는 화면) | **LWC**(Lightning Web Component — Salesforce의 커스텀 화면 부품 기술, Lightning App Builder로 배치) | 여러 Object 데이터를 한 화면에 커스텀 레이아웃으로 보여줘야 함 — `08_SCREEN_SPEC.md` |
 
 나머지(표준 오브젝트 사용, Flow로 표현되는 모든 조건 판정/레코드 생성)는 Apex 없이 처리한다.
@@ -184,8 +192,8 @@ Apex가 필요한 지점은 명확히 좁다.
 
 - 새 외부 연동이 필요해지면, 먼저 이 문서에 Integration Point로 추가하고 방향(Inbound/Outbound)·인증
   방식을 명시한 뒤 구현한다.
-- Tongss Solution 관련 내용은 "Salesforce가 무엇을 받는가"까지만 다룬다. Tongss Step 앱 내부 구조는
-  이 문서(또는 이 레포 어디에도) 다루지 않는다.
+- Tongss Step MVP 관련 내용은 "Salesforce가 무엇을 받는가"까지만 다룬다. Tongss Step MVP 화면·기능
+  자체의 상세 설계는 이 문서가 아니라 `00_PRODUCT_GUIDE.md`·Sara가 관리한다.
 - CS를 "외부 시스템"으로 다시 취급하는 변경(예: CS 전용 별도 시스템 유지)이 생기면 이는 프로젝트의
   핵심 전제를 뒤집는 것이므로 반드시 `10_DECISIONS.md`에 기록 후 진행한다.
 
@@ -198,3 +206,5 @@ Apex가 필요한 지점은 명확히 좁다.
 - [`06_OBJECT_ERD.md`](./06_OBJECT_ERD.md) — Object 간 관계(ERD)
 - [`07_PROCESS_DIAGRAM.md`](./07_PROCESS_DIAGRAM.md) — Flow/Apex 자동화의 단계별 상세
 - [`08_SCREEN_SPEC.md`](./08_SCREEN_SPEC.md) — 이 데이터가 나타나는 화면
+- [`members/00_SARA.md`](./members/00_SARA.md) — Tongss Step MVP 담당
+- [`members/02_EUNYOUNG.md`](./members/02_EUNYOUNG.md) — Tongss Step MVP ↔ Salesforce REST API 연동 담당

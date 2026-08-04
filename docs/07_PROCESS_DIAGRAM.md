@@ -108,12 +108,12 @@ sequenceDiagram
 | `Recommendation_AfterInsert_NotifySlack` (Apex Action) | Invocable Apex | Flow에서 호출 | Slack 메시지 발송 | 프로세스 1, 2 |
 | `Scheduled_CheckNewStore` | Scheduled Flow(일 1회) | 시간 기반 | 개점 3개월 이내 신규 매장 조회 → Recommendation 생성 | 프로세스 2 |
 | `Opportunity_AfterUpdate_CreateFollowup` | Record-Triggered Flow | Opportunity StageName 변경(After Update) | Follow-up(Task) 생성 | 프로세스 3 |
-| `Step_Summary_Upsert` (Apex, 배치/REST) | Apex | Tongss Solution Inbound 수신 | `Step_Summary__c` upsert(1:1 유지) | `05_SYSTEM_ARCHITECTURE.md` §3.3 |
+| `Step_Summary_Upsert` (Apex, REST API) | Apex | Tongss Step MVP Inbound 수신 | `Step_Summary__c` upsert(1:1 유지) | `05_SYSTEM_ARCHITECTURE.md` §3.3 |
 
 **Flow와 Apex의 역할 구분 원칙(재확인 — `03_PROJECT_GUIDE.md` §3.1, `05_SYSTEM_ARCHITECTURE.md` §5):**
 
 - **Flow** = Org 내부 레코드 간 로직 전부 (조건 판정, 조회, 레코드 생성/갱신)
-- **Apex** = 외부 시스템과의 통신이 필요한 지점만 (Slack Outbound, Tongss Solution Inbound 수신)
+- **Apex** = 외부 시스템과의 통신이 필요한 지점만 (Slack Outbound, Tongss Step MVP Inbound 수신)
 
 ---
 

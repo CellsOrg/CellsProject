@@ -6,6 +6,11 @@
 >
 > 구현 방식은 `03_PROJECT_GUIDE.md` §3.2를 따른다 — Customer 360 Record Page는 Lightning App Builder +
 > LWC(Admin + Developer 공동), 나머지 화면은 최대한 표준 Salesforce 기능(List View, Report, Dashboard)으로 구성한다.
+>
+> **Tongss Step MVP 화면은 이 문서의 대상이 아니다.** Tongss Step MVP(체크리스트·직원 관리 등, Sara
+> 구현)는 Salesforce Lightning Page가 아니라 Salesforce Org 밖의 별도 앱이다 — 그 화면 설계는
+> `00_PRODUCT_GUIDE.md` §3.5·§4.1이 다룬다. 이 문서는 그 앱이 만들어낸 결과(Step Summary)가 Salesforce
+> 화면에 어떻게 나타나는지만 다룬다(§1의 "Step Summary" Component).
 
 > **처음 보는 용어?**
 >
@@ -39,7 +44,7 @@
 | Case | 관련 CS Ticket Related List — RootCause, Status, CreatedDate. Wrong Usage 반복 여부를 한눈에 보이게 정렬(최신순) |
 | Opportunity | 관련 Sales Activity Related List — Stage, Owner |
 | Recommendation | 이 매장에 대한 Recommendation Related List(또는 LWC) — Reason, Score, Action, Status. Pending 상태 강조 |
-| Step Summary | 최신 Step 활용 현황(LWC 또는 Related List) — LearningRate, ChecklistRate, ActiveUsers |
+| Step Summary | 최신 Step 활용 현황(LWC 또는 Related List) — LearningRate, ChecklistRate, ActiveUsers. Tongss Step MVP가 만들어낸 운영 데이터의 요약본이 여기 나타난다(`05_SYSTEM_ARCHITECTURE.md` §3.3) |
 | Quick Actions | "새 Case 등록", "새 Sales Activity 등록", "방문 기록(Follow-up 완료 처리)" |
 
 ### 데이터 출처
@@ -165,6 +170,94 @@ Sara(PM), 승우(Admin Lead), 혜준(QA — 리포트 자체를 관리)
 
 ---
 
+## 6. Appendix — Customer360 App Navigation
+
+이 문서의 §1~§4는 화면 하나하나를 따로 설명했다. 이 Appendix는 "그 화면들이 실제로 Salesforce 안
+어디에, 어떤 순서로 놓여 있는가"를 처음 보는 사람 기준으로 정리한다.
+
+> **처음 보는 용어?**
+>
+> | 용어 | 설명 |
+> |---|---|
+> | Salesforce Org | 우리 팀이 쓰는 Salesforce 공간 전체 — 모든 App/Object/데이터가 이 안에 들어있다. |
+> | App(Lightning App) | Org 안에서 특정 목적(여기서는 Customer 360 운영)을 위해 관련 Tab을 모아놓은 화면 묶음. 하나의 Org 안에 여러 App이 있을 수 있다. |
+> | Tab | App 상단에 나열된 메뉴 하나. 클릭하면 그 Tab에 연결된 Object의 목록 화면(List View)이 열린다. |
+> | App Navigation | 어떤 Tab들이 어떤 순서로 App에 배치되는지에 대한 설계. |
+
+### 6.1 전체 구조 — Org → App → Object → Screen
+
+Salesforce를 처음 보면 "이 화면이 대체 어디에 있는 화면인지" 감이 안 잡히기 쉽다. 아래 4단계만
+기억하면 된다.
+
+```mermaid
+flowchart TB
+    ORG["Salesforce Org<br/><small>우리 팀 전체 Salesforce 공간</small>"]
+    APP["Customer360 App<br/><small>Lightning App — 이 프로젝트용 화면 묶음</small>"]
+    ORG --> APP
+
+    subgraph NAV["App Navigation (Tab 목록)"]
+        direction LR
+        T1["Home"]
+        T2["Accounts"]
+        T3["Cases"]
+        T4["Opportunities"]
+        T5["POS Usage"]
+        T6["Recommendations"]
+        T7["Reports"]
+        T8["Dashboard"]
+    end
+    APP --> NAV
+
+    T2 --> O2["Object: Account<br/>(Store)"]
+    T3 --> O3["Object: Case<br/>(CS Ticket)"]
+    T4 --> O4["Object: Opportunity<br/>(Sales Activity)"]
+    T5 --> O5["Object: POS_Usage__c"]
+    T6 --> O6["Object: Recommendation__c"]
+
+    O2 --> S2["Screen: Store Record Page<br/>(§1)"]
+    O6 --> S6["Screen: Recommendation List<br/>(§2)"]
+    T7 --> S7["Screen: Reports<br/>(§4)"]
+    T8 --> S8["Screen: Dashboard<br/>(§3)"]
+```
+
+**읽는 법:** Org(가장 큰 공간) 안에 Customer360 App(우리가 쓰는 화면 묶음)이 있고, 그 App을 열면
+위쪽에 Tab들이 나란히 보인다. Tab 하나를 클릭하면 그 Tab에 연결된 Object의 목록이 열리고, 그 목록에서
+레코드 하나를 클릭하면 이 문서 §1~§4에서 설명한 화면(Screen)이 나온다.
+
+### 6.2 Tab 목록
+
+App 상단에 이 순서로 Tab이 나열된다.
+
+```
+Home → Accounts → Cases → Opportunities → POS Usage → Recommendations → Reports → Dashboard
+```
+
+### 6.3 Tab별 상세
+
+| Tab | Object | Owner | Main User | Purpose |
+|---|---|---|---|---|
+| Home | 없음(표준 홈 화면) | 혜준 | 전체 | 로그인 후 첫 화면. 알림·최근 항목을 확인하는 시작점 |
+| Accounts | `Account`(Store) | 승우 | 박세일즈 | 담당 매장 목록을 조회·검색한다 |
+| Cases | `Case`(CS Ticket) | 승우 | CS 상담원 | CS 문의를 접수·처리한다(Epic 3의 시작점) |
+| Opportunities | `Opportunity`(Sales Activity) | 승우 | 박세일즈 | 영업 활동의 진행 단계(Stage)를 관리한다 |
+| POS Usage | `POS_Usage__c` | 승우 | 박세일즈 | 매장별 POS 지표(매출·주문·환불)를 조회한다 |
+| Recommendations | `Recommendation__c` | 승우(Flow가 생성) | 박세일즈 | "오늘 연락할 리드"(Pending 목록)를 확인한다 — §2 |
+| Reports | 여러 Object(Cross Object) | 혜준 | Sara·승우·혜준 | Recommendation 전환율 등 지표를 조회한다 — §4 |
+| Dashboard | Report가 소스 | 혜준 | Sara·승우 | 전체 현황을 한 화면에서 파악한다 — §3 |
+
+> **Step Summary는 왜 Tab이 없는가?** `Step_Summary__c`는 매장별로 최신 1건만 있는 요약 데이터라,
+> 목록을 따로 조회할 일이 거의 없다. 그래서 별도 Tab 없이 Store Record Page(§1) 안의 Component로만
+> 나타난다 — Object가 있다고 항상 Tab이 있는 것은 아니다.
+
+### 6.4 이 Appendix가 말하는 것
+
+이 4단계(Org → App → Object → Screen)는 이 문서 전체의 압축본이다. §1~§4가 "각 화면 안에 무엇이
+있는가"를 다뤘다면, 이 Appendix는 "그 화면에 어떻게 도달하는가"를 다룬다. 새 화면이 필요해지면 먼저
+이 4단계 중 어디에 들어갈지(새 Tab이 필요한지, 기존 화면의 Component로 충분한지)를 §5의 원칙에 따라
+검토한다.
+
+---
+
 ## Related Documents
 
 - [`04_DATA_MODEL.md`](./04_DATA_MODEL.md) — 각 화면에 나오는 Object/Field의 유일한 진실
@@ -172,3 +265,5 @@ Sara(PM), 승우(Admin Lead), 혜준(QA — 리포트 자체를 관리)
 - [`07_PROCESS_DIAGRAM.md`](./07_PROCESS_DIAGRAM.md) — Quick Action이 트리거하는 Flow 자동화
 - [`02_USER_FLOW.md`](./02_USER_FLOW.md) — 박세일즈가 이 화면들을 실제로 언제 보는지(하루 흐름)
 - [`data/SAMPLE_DATA.md`](./data/SAMPLE_DATA.md) — 이 화면을 채울 예시 데이터
+- [`data/DEMO_DATASETS.md`](./data/DEMO_DATASETS.md) — 이 화면들을 어떤 시나리오 순서로 시연하는지
+- [`members/00_SARA.md`](./members/00_SARA.md) — Tongss Step MVP 화면(이 문서 범위 밖) 담당

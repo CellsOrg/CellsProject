@@ -4,16 +4,19 @@
 
 우리 팀명은 **Cell**(Sales와 발음 유사). Salesforce 내 Customer 360 전담팀(SF360)이다. 고객은 **Tongss Place**.
 Tongss Place는 POS 37만 매장(100만 목표) 보유, 신사업 Tongss Step(HR·운영 통합 SaaS)을 파일럿 중.
-현재 Sales만 Salesforce 사용, CS는 별도 시스템 — 이 둘을 하나의 Org(Customer 360)로 통합하는 게 이 프로젝트다.
+**Tongss Place는 아직 CRM을 쓰지 않는다** — 영업·CS·운영 데이터가 여러 곳에 흩어져 있다. 이 프로젝트는
+Salesforce(Customer 360)를 **신규 도입**해 이 데이터를 하나의 Org로 통합 관리하는 것이다.
 
-**한 줄 목표:** 서울 중구&종로구 지역의 POS 1,000개 매장 중 Step 도입은 10개뿐. 나머지 990개 중 누구에게
-가야 할지 몰라 무작위 콜드콜만 하던 박세일즈가, Customer 360 도입 후 아침에 Slack으로
-오늘 연락할 리드 10개를 받는다 — 이 Before/After가 Demo Day의 전부다.
+**한 줄 목표:** 서울 중구&종로구 지역의 POS 1,000개 매장 중 Step 도입은 10개뿐. CRM 없이 데이터가
+흩어져 있어 나머지 990개 중 누구에게 가야 할지 몰라 무작위 콜드콜만 하던 박세일즈가, Customer 360
+도입 후 아침에 Slack으로 오늘 연락할 리드 10개를 받는다 — 이 Before/After가 Demo Day의 전부다.
 
 ## 절대 잊지 말 것
 
-- **Tongss Step 앱(TongssApp) 자체는 만들지 않는다.** "이미 출시되어 쓰이고 있다"고 가정만 한다.
-  기존 TongssApp 관련 자산은 `project-tongss` 레포에 있고, 이 프로젝트에서는 참조하지 않는다.
+- **Tongss Step 전체 앱은 만들지 않는다.** Tongss Place 고객이 실제 쓰는 운영 플랫폼(체크리스트·직원
+  관리·교육 현황·노무/세무 상담 신청·운영 현황)의 **MVP 화면만** 만들어, Salesforce(Customer 360)가
+  활용할 운영 데이터를 생성하는 역할로 제한한다. MVP 화면은 **Sara가 디자인·구현**한다. Tongss Step
+  전체 고도화는 Future Roadmap이며 이번 프로젝트 범위가 아니다 — `00_PRODUCT_GUIDE.md` 참조.
 - **페르소나는 박세일즈, 이대표 둘만** 다룬다. 다른 인물(김스태프 등)은 등장시키지 않는다.
 - Cross-sell 트리거는 **반복 조건**이다 — CS Case의 RootCause="Wrong Usage"가 최근 3개월 내
   2회 이상, 또는 개점 3개월 이내 신규 매장. 1회성 코드화로 즉시 전환되지 않는다.
@@ -29,7 +32,7 @@ Tongss Place는 POS 37만 매장(100만 목표) 보유, 신사업 Tongss Step(HR
 
 상세 필드는 `04_DATA_MODEL.md` 참조. 여기 없는 오브젝트/필드를 코드에서 임의로 만들지 않는다.
 
-## 문서 구조 (00~07)
+## 문서 구조 (00~10)
 
 ```
 00_PRODUCT_GUIDE.md    — 왜 이 프로젝트를 하는가

@@ -77,11 +77,11 @@ flowchart LR
 
 | Store_External_Id__c | Name | Industry | Region__c | Opened_Date__c | POS_Plan__c | NumberOfEmployees | Step_Status__c |
 |---|---|---|---|---|---|---|---|
-| STORE-1001 | 새싹커피 을지로점 | 카페 | 중구 | 2023-01-15 | Standard | 4 | Not Adopted |
+| STORE-1001 | MashiTa버거 을지로 본점 | 카페 | 중구 | 2023-01-15 | Standard | 4 | Not Adopted |
 | STORE-1002 | 좋은식당 종로점 | 식당 | 종로구 | 2026-06-01 | Basic | 6 | Not Adopted |
 | STORE-1003 | 청담미용실 중구점 | 미용 | 중구 | 2022-05-10 | Premium | 10 | Adopted |
 
-- **STORE-1001(새싹커피 을지로점)** = 함부기(이대표)의 매장. §6 시나리오의 주인공.
+- **STORE-1001(MashiTa버거 을지로 본점)** = 함부기(이대표)의 매장. §6 시나리오의 주인공.
 - **STORE-1002**는 개점일이 최근(2026-06-01, "오늘" 2026-08-04 기준 약 2개월 전)이라 "개점 3개월 이내
   신규 매장" 조건(`CLAUDE.md`)을 보여주는 예시다 — 프로세스 2(`07_PROCESS_DIAGRAM.md` §2)를 시연할 때 쓴다.
 - **STORE-1003**은 이미 Step을 도입한 매장(대조군) — Recommendation이 생기면 안 되는 경우를 보여준다.
