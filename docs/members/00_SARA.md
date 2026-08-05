@@ -95,35 +95,45 @@ Tongss Step MVP 화면(UI/Frontend) 전체 — `00_PRODUCT_GUIDE.md` §4.1.
   3. Tongss Step MVP가 어떤 화면(체크리스트·직원 관리 등)까지 포함할지 기획한다.
   4. 확정된 내용을 `docs/00~10` 문서에 반영한다.
 
-### Week 2 — Tongss Step MVP 화면 디자인
+### Week 2 — Tongss Step MVP 디자인 · 기본 화면 구현
 
-- **이번 주 목표:** Tongss Step MVP 화면의 디자인을 완성한다.
-- **왜 이 작업을 하는가:** Week 3에 실제 구현을 시작하려면 무엇을 만들지 먼저 정해져야 한다. 은영이
-  REST API를 설계하려면 화면에서 어떤 데이터가 나오는지 미리 알아야 한다.
+- **이번 주 목표:** Tongss Step MVP 화면의 디자인을 완성하고, **기본 화면(UI/Frontend)까지 구현한다.**
+- **왜 이 작업을 하는가:** Week 3는 연동에만 집중해야 하므로, 화면 자체는 이번 주 안에 동작하는
+  상태여야 한다. 은영이 REST API를 만들려면 화면에서 어떤 데이터가 나오는지 먼저 확정돼 있어야 한다.
 - **완성되어 있어야 하는 것**
   - Tongss Step MVP 화면 와이어프레임/디자인
   - 화면별 UX 흐름 정의
-- **누구와 협업해야 하는가:** 은영(REST API로 받을 데이터 형태 사전 협의)
-- **먼저 읽어야 하는 문서:** `00_PRODUCT_GUIDE.md` §3.5, `02_USER_FLOW.md` §4, `08_SCREEN_SPEC.md`
+  - **동작하는 Tongss Step MVP 기본 화면(체크리스트·직원 관리·교육 현황 등 최소 범위)**
+- **누구와 협업해야 하는가:** 은영(REST API로 받을 데이터 형태 사전 협의), 승우(`Step_Summary__c` 필드 확인)
+- **먼저 읽어야 하는 문서:** `00_PRODUCT_GUIDE.md` §3.5·§4.1, `02_USER_FLOW.md` §4, `08_SCREEN_SPEC.md`,
+  `04_DATA_MODEL.md` §5.5
 - **추천 구현 순서**
   1. `02_USER_FLOW.md` §4를 참고해 Tongss Step MVP가 만들어야 할 화면 목록을 정한다.
-  2. 화면별로 사용자가 어떤 순서로 조작하는지(UX 흐름)를 그린다.
-  3. 화면 디자인(와이어프레임)을 완성한다.
+  2. 화면별로 사용자가 어떤 순서로 조작하는지(UX 흐름)를 그리고, 디자인(와이어프레임)을 완성한다.
+  3. 화면을 실제로 구현한다.
+  4. 화면에서 입력되는 데이터가 `04_DATA_MODEL.md`의 `Step_Summary__c` 필드와 맞는지 은영과 함께 확인한다.
 
-### Week 3 — Tongss Step MVP 구현
+### Mid Review(8/14) 체크포인트
 
-- **이번 주 목표:** Tongss Step MVP 화면을 실제로 구현한다(UI/Frontend).
-- **왜 이 작업을 하는가:** 승우의 Recommendation Flow와 은영의 연동 작업은 실제 운영 데이터 없이는
-  테스트할 수 없다. 이번 주 안에 화면이 동작해야 Week 4의 전체 통합이 가능하다.
+`03_PROJECT_GUIDE.md` §7.3의 시연 흐름(Store → Case 생성 → Recommendation 생성 → Customer360에서
+확인 → Tongss Step MVP 연결 확인) 중 내가 책임지는 부분은 **Tongss Step MVP 기본 화면이 동작하는
+상태**다. Week 2 목표(기본 화면 구현)를 8/14 전에 끝내고, 은영과 화면이 보낼 데이터 형태를 미리
+합의해 초기 연결 확인을 준비한다.
+
+### Week 3 — Tongss Step MVP ↔ Customer 360 연동 지원
+
+- **이번 주 목표:** Week 2에서 만든 화면이 Customer 360과 실제로 연결되도록 은영을 지원한다.
+- **왜 이 작업을 하는가:** 화면이 있어도 연동이 안 되면 Step Summary가 Customer 360에 나타나지 않는다.
+  이번 주 안에 연동까지 끝나야 Week 4의 전체 통합 Demo가 가능하다.
 - **완성되어 있어야 하는 것**
-  - 동작하는 Tongss Step MVP 화면(체크리스트·직원 관리·교육 현황 등 최소 범위)
-  - Step Summary로 이어질 운영 데이터 입력 화면
-- **누구와 협업해야 하는가:** 은영(연동 지점 확인), 승우(`Step_Summary__c` 필드 확인)
-- **먼저 읽어야 하는 문서:** `00_PRODUCT_GUIDE.md` §4.1, `04_DATA_MODEL.md` §5.5
+  - Tongss Step MVP ↔ Customer 360 연동 완료(은영 담당 작업에 필요한 화면 정보·데이터 형태 제공)
+  - 연동 과정에서 발견된 화면 수정 사항 반영
+- **누구와 협업해야 하는가:** 은영(REST API 연동 지점 확인), 승우(`Step_Summary__c` 필드 확인)
+- **먼저 읽어야 하는 문서:** `05_SYSTEM_ARCHITECTURE.md` §3.3
 - **추천 구현 순서**
-  1. Week 2에서 확정한 디자인을 바탕으로 화면을 구현한다.
-  2. 화면에서 입력되는 데이터가 `04_DATA_MODEL.md`의 `Step_Summary__c` 필드와 맞는지 은영과 함께 확인한다.
-  3. 승우·은영과 함께 Tongss Step MVP → Salesforce 연동 지점을 확인한다.
+  1. 은영이 REST API를 만들 때 필요한 화면·데이터 정보를 제공한다.
+  2. 실제 연동 테스트에 참여해 화면에서 나가는 데이터가 의도대로 전달되는지 확인한다.
+  3. 연동 중 발견된 화면 이슈를 바로 수정한다.
 
 ### Week 4 — UX 개선과 Demo 흐름 정리
 

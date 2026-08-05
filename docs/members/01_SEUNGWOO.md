@@ -120,6 +120,14 @@ Recommendation List(§2)
   2. `07_PROCESS_DIAGRAM.md` §1의 순서대로 Case 생성 → Wrong Usage 반복 체크 Flow를 만든다.
   3. `data/SAMPLE_DATA.md`의 더미 데이터로 Flow가 정상 동작하는지 확인한다.
 
+### Mid Review(8/14) 체크포인트
+
+`03_PROJECT_GUIDE.md` §7.3의 시연 흐름(Store → Case 생성 → Recommendation 생성 → Customer360에서
+확인 → Tongss Step MVP 연결 확인) 중 내가 책임지는 부분은 **Case 생성부터 Recommendation 생성까지의
+Flow가 동작하는 상태**다. Week 1~2에서 만든 Object/Field와 Flow 1차 버전이 8/14 전에 실제로
+동작해야 한다 — Recommendation 자동화 자체의 완성은 Week 3(§7.4) 목표이므로, Mid Review에서는
+"기본 흐름이 원리적으로 동작한다"만 보여주면 충분하다.
+
 ### Week 3 — Recommendation 자동화
 
 - **이번 주 목표:** Recommendation 생성 자동화를 완성한다.

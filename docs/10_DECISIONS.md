@@ -478,6 +478,50 @@ Object/Flow/Process 정의를 그대로 인용할 뿐, 새 Field나 관계를 �
 
 ---
 
+---
+
+## Opportunity 수동 생성 확정, Score__c 제거, 일정·Mid Review·Permission Matrix 정리 (문서 간 불일치 제거)
+
+**날짜:** 2026-08-05
+**담당/제안자:** Sara
+**결정:** 이미 결정된 내용과 문서 간 불일치를 제거하는 7가지 정리를 진행했다.
+
+1. **Opportunity는 항상 박세일즈가 수동 생성한다** — Flow는 절대 Opportunity를 만들지 않는다.
+   `04_DATA_MODEL.md`(§8), `06_OBJECT_ERD.md`, `07_PROCESS_DIAGRAM.md`(§3), `05_SYSTEM_ARCHITECTURE.md`
+   (§5)에 남아있던 "일부는 Flow가 생성"·"주로 수동"·"Opportunity 생성 시 함께 처리하는 Flow" 등
+   예외를 암시하는 표현을 전부 제거했다. `02_USER_FLOW.md`는 이미 정확했다.
+2. **Recommendation의 `Score__c` 필드를 MVP에서 제거했다.** 우선순위는 Wrong Usage 반복 건수(Reports)
+   와 `CreatedDate` 최신순으로만 판단한다. `04_DATA_MODEL.md`(필드 표·Data Dictionary 20개로 재계산·
+   Salesforce Mapping), `05_SYSTEM_ARCHITECTURE.md`, `08_SCREEN_SPEC.md`(List View 정렬·컬럼),
+   `data/SAMPLE_DATA.md`에서 Score 관련 내용을 제거하거나 대체 설명으로 바꿨다. Score 기반 계산형
+   우선순위가 필요해지면 Future Scope로 재검토한다.
+3. **Tongss Step MVP 일정을 앞당겼다.** 기본 화면(UI/Frontend)까지 Week 2에 구현하고, Week 3는 연동
+   완료에만 집중한다. `03_PROJECT_GUIDE.md` §7.2·§7.4·§7.5, `members/00_SARA.md`,
+   `members/02_EUNYOUNG.md`의 Weekly Guide를 재배치했다.
+4. **Permission Matrix를 추가했다.** 새 문서를 만들지 않고 `08_SCREEN_SPEC.md` §7에 User×Object
+   간단 표(Account/Case/Opportunity/Recommendation/Dashboard)로 넣었고, `members/03_HYEJUN.md`
+   Weekly Guide(Week 1~2)에 작업 시점을 반영했다.
+5. **일정의 Single Source of Truth를 `03_PROJECT_GUIDE.md` §7 하나로 확정했다.** `00_PRODUCT_GUIDE.md`
+   §6.1의 중복 Milestone 표를 제거하고 요약 문장 + 참조로 바꿨다.
+6. **Tableau 연동을 Future Scope로 명시 이동했다.** 유일한 근거였던 §5의 중복 Milestone 표가 제거되며
+   자연히 사라졌던 것을, `00_PRODUCT_GUIDE.md` §4.2 Future Roadmap 표에 "추후 결정" 항목으로 명시해
+   흔적 없이 사라지지 않고 추적 가능하게 남겼다.
+7. **Mid Review(8/14)를 팀 전체 시연 흐름 하나로 재정리했다.** `03_PROJECT_GUIDE.md` §7.3에 Store →
+   Case 생성 → Recommendation 생성 → Customer360 확인 → Tongss Step MVP 연결 확인 흐름을 Mermaid로
+   추가하고, 5개 members 문서 전부에 "Mid Review(8/14) 체크포인트"를 Week 2와 Week 3 사이에 삽입해
+   각자 그 시점까지 무엇을 끝내야 하는지 명시했다.
+
+**Business Logic 원칙(반복 조건, Flow/Apex/Agentforce 역할 분리)과 Architecture 철학은 바꾸지 않았다.**
+Score__c 필드 제거는 Object 변경이지만 이번 결정에서 명시적으로 요청된 범위이며, 그 외 Object/
+Relationship/Flow 로직은 그대로다.
+
+**영향받는 문서/트랙:** `docs/02_USER_FLOW.md`(확인만, 변경 없음), `docs/04_DATA_MODEL.md`,
+`docs/05_SYSTEM_ARCHITECTURE.md`, `docs/06_OBJECT_ERD.md`, `docs/07_PROCESS_DIAGRAM.md`,
+`docs/08_SCREEN_SPEC.md`, `docs/00_PRODUCT_GUIDE.md`, `docs/03_PROJECT_GUIDE.md`,
+`docs/data/SAMPLE_DATA.md`, `docs/members/00~04_*.md`
+
+---
+
 ## Related Documents
 
 - [`CLAUDE.md`](../CLAUDE.md) — "트랙을 넘는 변경은 여기 기록 후 진행" 규칙의 원문

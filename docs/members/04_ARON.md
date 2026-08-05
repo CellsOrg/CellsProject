@@ -110,6 +110,12 @@ Day에서 실제로 조작해서 보여준다.
   2. Data Import Wizard 또는 CLI로 Org에 적재한다.
   3. 승우가 만든 Flow가 이 데이터로 정상 동작하는지 함께 검증한다.
 
+### Mid Review(8/14) 체크포인트
+
+`03_PROJECT_GUIDE.md` §7.3의 시연 흐름(Store → Case 생성 → Recommendation 생성 → Customer360에서
+확인 → Tongss Step MVP 연결 확인) 전체가 이 데이터로 재현돼야 한다. 함부기 매장(STORE-1001)과 Wrong
+Usage Case 2건이 8/14 전에 Org에 적재되어 있어야, 팀이 이 흐름을 실제로 시연할 수 있다.
+
 ### Week 3 — Demo Script · Business Validation
 
 - **이번 주 목표:** Demo Script를 작성하고 Business Validation을 진행한다.

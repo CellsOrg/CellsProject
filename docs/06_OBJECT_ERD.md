@@ -43,7 +43,8 @@ Object가 결국 "어느 매장 이야기인가"로 귀결되는 이유다.
 
 매장에 대한 영업 활동/거래 진행 상황 1건이다. 박세일즈가 리드를 실제 영업으로 전환할 때 생성한다.
 
-- **언제 생성:** 박세일즈가 Recommendation을 보고 실제 영업을 시작할 때(주로 수동 생성).
+- **언제 생성:** 박세일즈가 Recommendation을 보고 실제 영업을 시작할 때 **직접** 생성한다 — 항상
+  수동 생성이며, Flow가 자동으로 만들지 않는다(`04_DATA_MODEL.md` §8).
 - **누가 사용:** 박세일즈(생성·진행 단계 변경).
 - **왜 존재:** 영업 활동의 진행 단계(Stage: Prospecting~Closed)를 추적하기 위해.
 
@@ -57,9 +58,10 @@ Object가 결국 "어느 매장 이야기인가"로 귀결되는 이유다.
 
 ### Step Summary (`Step_Summary__c`, Business Object)
 
-Tongss Step 앱의 활용 현황 요약이다. Tongss Solution(외부 시스템)에서 요약값만 들어온다.
+Tongss Step MVP의 활용 현황 요약이다. Tongss Step MVP(Salesforce Org 밖의 별도 앱, 이 프로젝트에서
+구현 — `00_PRODUCT_GUIDE.md` §3.5)에서 요약값만 들어온다.
 
-- **언제 생성:** Tongss Solution과 동기화될 때마다 갱신된다(매장당 최신 1건만 유지, upsert).
+- **언제 생성:** Tongss Step MVP와 동기화될 때마다 갱신된다(매장당 최신 1건만 유지, upsert).
 - **누가 사용:** 시스템이 자동으로 만들고, 박세일즈·승우가 조회한다.
 - **왜 존재:** "이 매장이 Step을 잘 쓰고 있는지" 결과만 필요하고, 앱 내부 동작까지는 알 필요 없다는
   프로젝트 철학 때문 — `04_DATA_MODEL.md` §1.

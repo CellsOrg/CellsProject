@@ -120,34 +120,49 @@ Customer 360 Record Page의 커스텀 LWC 컴포넌트(`08_SCREEN_SPEC.md` §1):
   2. Slack 메시지를 보내는 Apex(Invocable Apex Action)를 구현한다.
   3. `08_SCREEN_SPEC.md` §1의 LWC 목록(`posUsageSummary` 등) 중 기본 형태를 먼저 만든다.
 
-### Week 3 — Slack·화면 고도화
+### Mid Review(8/14) 체크포인트
 
-- **이번 주 목표:** Slack 연동과 화면을 고도화한다.
-- **왜 이 작업을 하는가:** Recommendation이 실제로 생성되기 시작하는 주(승우 Week 3)라, 지금 Slack
-  발송이 붙어 있지 않으면 그 데이터가 박세일즈에게 전달되지 않는다.
-- **완성되어 있어야 하는 것**
-  - Recommendation 생성 시 실제로 발송되는 Slack 메시지
-  - 고도화된 LWC 컴포넌트
-- **누구와 협업해야 하는가:** 승우(Recommendation Flow ↔ Slack 발송 연결)
-- **먼저 읽어야 하는 문서:** `07_PROCESS_DIAGRAM.md` §5, `08_SCREEN_SPEC.md` §1
-- **추천 구현 순서**
-  1. 승우가 만든 Recommendation 생성 Flow와 Slack 발송 Apex Action을 연결한다.
-  2. `07_PROCESS_DIAGRAM.md` §5를 참고해 Agentforce가 구성한 설명이 메시지에 포함되도록 확인한다.
-  3. LWC 컴포넌트에 실제 데이터(POS Usage, Step Summary, Recommendation)를 연결한다.
+`03_PROJECT_GUIDE.md` §7.3의 시연 흐름 중 내가 책임지는 부분은 **Slack 기본 연동이 동작하는 상태**와
+**Tongss Step MVP와의 초기 연결 확인**이다. Recommendation이 생기면 Slack 메시지가 발송되는 것까지는
+Week 2 결과물로 확인돼 있어야 하고, Tongss Step MVP 쪽은 정식 REST API 연동(Week 3 목표)까지는
+아니어도 "화면과 Salesforce가 통신할 수 있다"는 정도의 테스트 호출은 8/14 전에 해본다.
 
-### Week 4 — Tongss Step 연동 마무리
+### Week 3 — Tongss Step MVP 연동 · Slack·화면 고도화
 
-- **이번 주 목표:** Tongss Step MVP ↔ Salesforce 연동을 마무리한다.
-- **왜 이 작업을 하는가:** Sara가 만드는 Tongss Step MVP 화면이 완성돼도, 이 연동이 없으면 그 운영
-  데이터가 Customer 360으로 들어오지 않는다 — Step Summary Component가 빈 화면으로 남는다.
+- **이번 주 목표:** Tongss Step MVP ↔ Salesforce 연동을 **완료**하고, Slack 연동과 화면을 고도화한다.
+- **왜 이 작업을 하는가:** Sara가 Week 2에 만든 Tongss Step MVP 화면이 있어도, 연동이 없으면 그 운영
+  데이터가 Customer 360으로 들어오지 않는다 — Step Summary Component가 빈 화면으로 남는다. 동시에
+  Recommendation이 실제로 생성되기 시작하는 주(승우 Week 3)라 Slack 발송도 이번 주에 붙어야 한다.
 - **완성되어 있어야 하는 것**
   - REST API로 Tongss Step MVP의 운영 데이터가 `Step_Summary__c`로 들어오는 연동 완료
-- **누구와 협업해야 하는가:** Sara(Tongss Step MVP가 만들어내는 데이터 형태 확인)
-- **먼저 읽어야 하는 문서:** `05_SYSTEM_ARCHITECTURE.md` §3.3, `04_DATA_MODEL.md` §5.5
+  - Recommendation 생성 시 실제로 발송되는 Slack 메시지
+  - 고도화된 LWC 컴포넌트
+- **누구와 협업해야 하는가:** Sara(Tongss Step MVP가 만들어내는 데이터 형태 확인), 승우(Recommendation
+  Flow ↔ Slack 발송 연결, `Step_Summary__c` 필드 확인)
+- **먼저 읽어야 하는 문서:** `05_SYSTEM_ARCHITECTURE.md` §3.3, `04_DATA_MODEL.md` §5.5,
+  `07_PROCESS_DIAGRAM.md` §5, `08_SCREEN_SPEC.md` §1
 - **추천 구현 순서**
   1. Sara가 만든 Tongss Step MVP 화면에서 어떤 데이터가 나오는지 확인한다.
-  2. REST API로 그 데이터를 받아 `Step_Summary__c`를 upsert하는 Apex를 구현한다.
-  3. 전체 Integration이 끝까지 연결되는지 테스트한다.
+  2. REST API로 그 데이터를 받아 `Step_Summary__c`를 upsert하는 Apex를 구현하고, 전체 Integration이
+     끝까지 연결되는지 테스트한다.
+  3. 승우가 만든 Recommendation 생성 Flow와 Slack 발송 Apex Action을 연결한다.
+  4. `07_PROCESS_DIAGRAM.md` §5를 참고해 Agentforce가 구성한 설명이 메시지에 포함되도록 확인한다.
+  5. LWC 컴포넌트에 실제 데이터(POS Usage, Step Summary, Recommendation)를 연결한다.
+
+### Week 4 — 전체 Integration 안정화
+
+- **이번 주 목표:** Tongss Step MVP·Slack 연동을 포함한 전체 Integration을 안정화한다.
+- **왜 이 작업을 하는가:** 연동 자체는 Week 3에 끝났지만, 실제 통합 Demo(팀 전체 Week 4 목표)를 준비
+  하려면 여러 기능이 동시에 돌아갈 때 생기는 버그를 이번 주에 잡아야 한다.
+- **완성되어 있어야 하는 것**
+  - Tongss Step MVP·Slack 연동 버그 수정 완료
+  - 안정화된 전체 Integration
+- **누구와 협업해야 하는가:** 혜준(QA 중 발견된 이슈 공유)
+- **먼저 읽어야 하는 문서:** `05_SYSTEM_ARCHITECTURE.md`
+- **추천 구현 순서**
+  1. 혜준의 QA에서 나온 Integration 관련 이슈를 우선순위대로 수정한다.
+  2. Tongss Step MVP → Slack까지 이어지는 전체 흐름을 다시 테스트한다.
+  3. 남은 버그를 정리해 Week 5로 넘길 항목과 이번 주 내 처리할 항목을 구분한다.
 
 ### Week 5 — 개발 마무리
 

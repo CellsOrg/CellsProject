@@ -81,7 +81,7 @@ flowchart TB
 |---|---|---|
 | Customer 360 Data | Account/Case/Opportunity/`POS_Usage__c`/`Step_Summary__c`에 데이터를 보관 | 조건 판정, 추천 생성, 설명 생성 |
 | Flow | 반복 CS 문의·Wrong Usage·신규 매장 등 조건을 판정하고 `Recommendation__c`를 생성 | 자연어 설명, 대화형 질의 응답 |
-| `Recommendation__c` | Flow가 만든 추천 결과를 담는 Salesforce Object(Score/Reason/Action/Status) | AI가 실시간으로 만들어내는 응답이 아님 — 저장된 레코드 |
+| `Recommendation__c` | Flow가 만든 추천 결과를 담는 Salesforce Object(Reason/Action/Status) | AI가 실시간으로 만들어내는 응답이 아님 — 저장된 레코드 |
 | Agentforce | Customer 360 + `Recommendation__c`를 읽어 자연어 질의 응답·추천 이유 설명·영업 제안 수행 | `Recommendation__c` 생성, 반복 조건 판정 |
 | Slack / Sales User | Agentforce가 구성한 설명을 전달받거나(Slack), Salesforce 안에서 Agentforce와 직접 대화(Sales User) | - |
 
@@ -128,7 +128,7 @@ flowchart TB
 
 ### 3.4 Slack — Outbound만
 
-- **보내는 데이터:** 그날 박세일즈에게 전달할 `Recommendation__c` 목록(매장명, Reason, Score, Action) —
+- **보내는 데이터:** 그날 박세일즈에게 전달할 `Recommendation__c` 목록(매장명, Reason, Action) —
   `02_USER_FLOW.md` §2, `07_PROCESS_DIAGRAM.md`
 - **주기:** 매일 아침(정확한 시각은 데모 시나리오에 맞춰 아론·승우 협의)
 - **인증:** Slack Bot Token을 Salesforce External Credential에 저장, Apex가 이를 이용해 Slack API를 호출
@@ -175,7 +175,7 @@ Apex가 필요한 지점은 명확히 좁다.
 
 | 위치 | 구현 방식 | 이유 |
 |---|---|---|
-| Case/Opportunity 내부 자동화 (생성, Wrong Usage 체크, **`Recommendation__c` 생성**, Task 생성) | **Flow** | Org 내부 레코드 간 로직은 선언적으로 충분히 표현됨 — `07_PROCESS_DIAGRAM.md`. **Agentforce가 아니라 Flow가 생성한다.** |
+| Case 내부 자동화 (생성, Wrong Usage 체크), **`Recommendation__c` 생성**, Opportunity Stage 변경 후 Task 생성 | **Flow** | Org 내부 레코드 간 로직은 선언적으로 충분히 표현됨 — `07_PROCESS_DIAGRAM.md`. **Agentforce가 아니라 Flow가 생성한다.** Opportunity 자체는 Flow가 만들지 않는다 — 박세일즈가 항상 직접 생성한다. |
 | `Recommendation__c` 자연어 설명 / 질의 응답 / 영업 제안 | **Agentforce** (Prompt Builder 기본, 필요 시 Apex Action) | 이미 저장된 데이터를 자연어로 풀어내는 것은 Flow의 역할이 아니라 AI 레이어의 역할 |
 | Slack Outbound 호출 | **Apex** (Flow가 Invocable Apex Action 호출) | HTTP 콜아웃 + External Credential 인증 처리는 Flow 단독으로 다루기 어려움. 메시지 문구는 Agentforce가 구성 |
 | Tongss Step MVP Inbound 수신 처리 | **Apex**(REST API 수신 후 `Step_Summary__c` upsert) | 외부 API 페이로드 파싱은 Flow보다 Apex가 안정적 |

@@ -125,9 +125,9 @@ STORE-1001·STORE-1002는 아직 Not Adopted이므로 Step Summary 레코드 자
 원칙적으로 CSV로 넣지 않는다(§2). 아래는 §4.2의 Case 2건이 반복 조건을 충족했을 때 **Flow가 만들어야
 하는 결과값**을 미리 보여주는 참고용 예시다 — 화면 데모를 먼저 확인하고 싶을 때만 수동으로 흉내 낸다.
 
-| Store_External_Id__c | Reason__c | Score__c | Action__c | Status__c | Owner |
-|---|---|---|---|---|---|
-| STORE-1001 | Wrong Usage | 82 | Call | Pending | 박세일즈 |
+| Store_External_Id__c | Reason__c | Action__c | Status__c | Owner |
+|---|---|---|---|---|
+| STORE-1001 | Wrong Usage | Call | Pending | 박세일즈 |
 
 ### 4.6 Sales Activity (`Opportunity`) — `opportunities.csv`
 

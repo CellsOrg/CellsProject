@@ -215,11 +215,15 @@ Tongss Step MVP(Salesforce Org 밖의 별도 앱, Sara 구현 — `00_PRODUCT_GU
 |---|---|---|---|---|---|
 | `Store__c` | Store | Lookup(Account) | Y | - | 소속 매장 |
 | `Reason__c` | Reason | Picklist | Y | Wrong Usage, New Store, High Sales, Many Employees | 추천이 발생한 근거. `Wrong Usage`/`New Store`는 `CLAUDE.md`의 반복 조건, `High Sales`/`Many Employees`는 매장 특성 기반 근거 |
-| `Score__c` | Score | Number(3,0) | N | 0~100 | 우선순위 점수(Flow가 산정해 레코드 생성 시 함께 기록. Agentforce는 이 값을 읽어 설명할 뿐 직접 쓰지 않음 — `05_SYSTEM_ARCHITECTURE.md` §3.5) |
 | `Action__c` | Action | Picklist | Y | Call, Visit, Email | 권장 접촉 방식 |
 | `Status__c` | Status | Picklist | Y (기본값 Pending) | Pending, Accepted, Dismissed | 박세일즈가 이 추천을 어떻게 처리했는지 |
-| `CreatedDate` | Created Date | DateTime | 표준(시스템) | - | 자동 생성 |
+| `CreatedDate` | Created Date | DateTime | 표준(시스템) | - | 자동 생성. 우선순위 정렬의 기준(최신순)으로도 쓰인다 — `08_SCREEN_SPEC.md` §2 |
 | `OwnerId` | Owner | Lookup(User) | 표준 | - | 표준 필드 재사용 — 이 추천이 전달된 영업 담당자(박세일즈 역할). Slack 알림 대상 결정에 사용 |
+
+> **Score__c는 MVP 범위에 없다.** 우선순위 점수를 계산하는 별도 로직 대신, Recommendation 우선순위는
+> Wrong Usage 반복 건수(Reports의 "Wrong Usage Repeat Stores" — `08_SCREEN_SPEC.md` §4)와 `CreatedDate`
+> 최신순만으로 판단한다. Score 같은 계산형 우선순위가 필요해지면 Future Scope로 다시 검토한다
+> (`10_DECISIONS.md`).
 
 ---
 
@@ -260,10 +264,10 @@ Business Object가 아니다 — `06_OBJECT_ERD.md`에서도 Account를 직접 �
 | Case (CS Ticket) | 2 (`Engineer_Visited__c`, `RootCause__c`) | `AccountId`, `Type`, `Status`, `Priority`, `OwnerId`, `CreatedDate` | `AccountId` (표준 Lookup) |
 | Opportunity (Sales Activity) | 0 | `AccountId`, `OwnerId`, `StageName`, `CreatedDate` | `AccountId` (표준 Lookup) |
 | `Step_Summary__c` | 4(전체 커스텀) | - | `Store__c` (Lookup) |
-| `Recommendation__c` | 4(전체 커스텀) | `OwnerId`, `CreatedDate` | `Store__c` (Lookup) |
+| `Recommendation__c` | 3(전체 커스텀) | `OwnerId`, `CreatedDate` | `Store__c` (Lookup) |
 
 **신규 커스텀 오브젝트는 3개(`POS_Usage__c`, `Step_Summary__c`, `Recommendation__c`), 총 신규 커스텀 필드는
-Account 4개 + Case 2개 + 커스텀 오브젝트 15개 = 21개**다. 이 숫자가 늘어나면 먼저 이 문서를 고치고
+Account 4개 + Case 2개 + 커스텀 오브젝트 14개 = 20개**다. 이 숫자가 늘어나면 먼저 이 문서를 고치고
 `10_DECISIONS.md`에 왜 늘었는지 남긴다.
 
 ### 7.2 Supporting Standard Object
@@ -272,7 +276,7 @@ Account 4개 + Case 2개 + 커스텀 오브젝트 15개 = 21개**다. 이 숫자
 |---|---|---|---|
 | Task (Follow-up) | 0 | `WhatId`, `OwnerId`, `ActivityDate`, `Status` | `WhatId` → Opportunity → `AccountId` (2-hop, §6.1) |
 
-Business Object 집계(위 21개)에는 포함하지 않는다 — Task는 새 스키마가 아니라 표준 오브젝트를 그대로
+Business Object 집계(위 20개)에는 포함하지 않는다 — Task는 새 스키마가 아니라 표준 오브젝트를 그대로
 쓰는 것이기 때문이다.
 
 ---
@@ -288,7 +292,7 @@ Business Object 집계(위 21개)에는 포함하지 않는다 — Task는 새 �
 | Account (Store) | Business Object | 승우 (Admin Lead) | 아론이 Dummy Data로 최초 적재, 이후 실제 운영 시 Tongss Place 매장 마스터 연동 |
 | `POS_Usage__c` | Business Object | 승우 (Admin Lead) | 외부 POS 시스템 Inbound(Import) — `05_SYSTEM_ARCHITECTURE.md` |
 | Case (CS Ticket) | Business Object | 승우 (Admin Lead) | CS 상담원이 Salesforce에서 직접 생성(더 이상 별도 CS 시스템 아님) |
-| Opportunity (Sales Activity) | Business Object | 승우 (Admin Lead) | 박세일즈 역할 사용자가 직접 생성/갱신, 일부는 Recommendation Accepted 시 Flow가 생성 |
+| Opportunity (Sales Activity) | Business Object | 승우 (Admin Lead) | 박세일즈 역할 사용자가 **항상 직접** 생성/갱신 — Flow는 Opportunity를 생성하지 않는다(Recommendation을 검토한 뒤 수동 생성) |
 | `Step_Summary__c` | Business Object | 승우 (Admin Lead), 연동은 은영 (Developer Lead) | Tongss Step MVP(Sara 구현)에서 생성된 운영 데이터를 은영이 REST API로 수신해 upsert — `05_SYSTEM_ARCHITECTURE.md` §3.3 |
 | `Recommendation__c` | Business Object | 승우 (Admin Lead) | Flow(반복 조건 충족 시 자동 생성) — `07_PROCESS_DIAGRAM.md`. Agentforce는 생성하지 않고 읽기만 한다 — `05_SYSTEM_ARCHITECTURE.md` §3.5 |
 | Task (Follow-up) | Supporting Standard Object | 승우 (Admin Lead) | Flow(Opportunity Stage 변경 시 자동 생성) |
@@ -339,7 +343,6 @@ Business 용어로만 대화할 때 실제 Salesforce API 이름을 찾기 위�
 | Step Summary.LastSyncDate | `Step_Summary__c.Last_Sync_Date__c` |
 | Recommendation.Store | `Recommendation__c.Store__c` |
 | Recommendation.Reason | `Recommendation__c.Reason__c` |
-| Recommendation.Score | `Recommendation__c.Score__c` |
 | Recommendation.Action | `Recommendation__c.Action__c` |
 | Recommendation.Status | `Recommendation__c.Status__c` |
 | Recommendation.CreatedDate | `Recommendation__c.CreatedDate` |

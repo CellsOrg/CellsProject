@@ -93,10 +93,10 @@ sequenceDiagram
 **Flow/Apex 경계:** 전부 **Flow**(Record-Triggered Flow on Opportunity, After Update). 외부 연동이나
 복잡한 계산이 없어 Apex가 필요 없다.
 
-**Recommendation과의 관계:** 박세일즈가 Recommendation을 근거로 Opportunity를 만들거나 진행시켰다면,
-해당 Recommendation의 `Status__c`를 "Accepted"로 갱신하는 것은 박세일즈의 수동 조작(또는 Opportunity
-생성 시 함께 처리하는 Flow)이다 — Recommendation은 Opportunity를 직접 참조하지 않으므로(`06_OBJECT_ERD.md`
-§3) 자동으로 연결되지 않는다.
+**Recommendation과의 관계:** Opportunity는 Flow가 만들지 않는다 — 박세일즈가 Recommendation을 검토한
+뒤 **항상 직접** Opportunity를 만든다. 그 시점에 해당 Recommendation의 `Status__c`를 "Accepted"로
+갱신하는 것도 박세일즈의 수동 조작이다 — Recommendation은 Opportunity를 직접 참조하지 않으므로
+(`06_OBJECT_ERD.md` §3) 자동으로 연결되지 않는다.
 
 ---
 

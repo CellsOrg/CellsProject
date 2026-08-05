@@ -120,6 +120,7 @@ Customer 360이 안정화된 이후의 데이터 활용 방향은 §4의 Future 
 | 제안서 자동 생성(Agentforce) | 매장별 데이터를 근거로 영업 제안서를 AI가 초안 작성 |
 | 전문가 CRM(세무사·노무사·컨설턴트 관리) | Tongss Step의 노무/세무 상담 신청 데이터를 실제 전문가 매칭·관리로 확장 |
 | Tongss Step 고도화 | MVP 화면을 넘어 Tongss Step을 실제 서비스 수준의 HR·운영 통합 SaaS로 완성 |
+| Tableau 연동 | 별도 BI 도구 연동 여부는 추후 결정. 이번 MVP는 Salesforce 표준 Report/Dashboard(`08_SCREEN_SPEC.md` §3·§4)로 충분히 커버한다 |
 
 **MVP와 Future는 명확히 분리한다.** Future 항목은 Demo Day에서 "다음 단계 방향성"으로만 언급하고,
 이번 프로젝트의 완료 기준(Definition of Done)에는 포함하지 않는다.
@@ -144,19 +145,9 @@ Customer 360이 안정화된 이후의 데이터 활용 방향은 §4의 Future 
 
 ### 6.1 추진 일정 (Milestone)
 
-> 아래는 구간별 개요다. 주차별 상세 Deliverable과 담당자는 `03_PROJECT_GUIDE.md` §7이 원천이다 —
-> 일정이 바뀌면 이 표와 §7을 함께 고친다.
-
-| 구간 | 기간/날짜 | 내용 |
-|---|---|---|
-| Week 1 | 8/3 ~ 8/7 | 프로젝트 문서 확정, Customer 360 데이터 모델 설계, 통합 Org 구조(Account/Case/Opportunity) 설계, 핵심 Object 및 관계 정의 |
-| Week 2 | 8/10 ~ 8/13 | CS 문의 접수 → Case 생성 프로세스 구현, Customer 360 레코드 페이지 기본 화면 구현(Dummy Data 기반), Demo Launch Day |
-| **중간점검 Day** | **8/14** | Org 및 전체 프로세스 1차 완성, 기능 및 UX 리뷰, 수정 사항 및 추가 개발 범위 결정 |
-| Week 3 | 8/17 ~ 8/21 | VOC 데이터 기반 Lead 전환 로직 구현, Cross-selling 프로세스 및 KPI 필드 반영, Agentforce 검증 Agent 1차 구성 |
-| Week 4 | 8/24 ~ 8/28 | Tongss Solution 영업 시나리오 완성, Demo 시나리오 및 QA 진행, Slack·Tableau 연동 마무리 |
-| Week 5 | 8/31 ~ 9/3 | 기능 Freeze(신규 기능 개발 중단), 버그 수정 및 최종 QA, 발표 리허설, 내부 목표 완료일(9/1) |
-| **결과물 제출** | **9/2** | 최종 산출물 제출 |
-| Demo Day | 9/4 | 최종 발표 |
+> **일정의 Single Source of Truth는 `03_PROJECT_GUIDE.md` §7이다.** 이 문서에는 같은 일정표를
+> 중복 작성하지 않는다 — Week별 목표·Deliverable·담당자·Mid Review·Demo Day는 전부 그 문서를 본다.
+> 요약하면: Week 1~5(8/3~9/3), 중간점검 8/14, 결과물 제출 9/2, Demo Day 9/4.
 
 ### 6.2 리스크
 

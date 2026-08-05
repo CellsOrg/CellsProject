@@ -42,7 +42,7 @@ Org 운영 기반(권한·화면 배치·리포팅)을 관리하고, 품질과 �
 
 이번 프로젝트가 끝났을 때 내가 최종적으로 완성해야 하는 결과물이다.
 
-- Permission Set
+- Permission Matrix(`08_SCREEN_SPEC.md` §7)와 그 기준으로 만든 Permission Set
 - Lightning App / Navigation 구성
 - Reports/Dashboard
 - QA·UAT 결과, 배포 기록
@@ -78,30 +78,39 @@ Org 운영 기반(권한·화면 배치·리포팅)을 관리하고, 품질과 �
 - **왜 이 작업을 하는가:** 승우가 Object를 만들기 시작하면 곧바로 "누가 이걸 볼 수 있어야 하는가"를
   정해야 한다. 권한 설계가 늦어지면 나중에 전체 데이터를 다시 검토해야 한다.
 - **완성되어 있어야 하는 것**
+  - **Permission Matrix(`08_SCREEN_SPEC.md` §7 — User × Object 접근 권한 표)**
   - 역할별 Permission Set 설계안(CS 상담원/영업 담당자 등)
   - Lightning App 구조 설계안
 - **누구와 협업해야 하는가:** 승우(어떤 Object/Field가 생기는지 확인)
 - **먼저 읽어야 하는 문서:** `09_PROJECT_TREE.md` §3, `08_SCREEN_SPEC.md`
 - **추천 구현 순서**
-  1. 어떤 사용자 역할이 있는지(CS 상담원, 영업 담당자 등) 정리한다.
-  2. 역할별로 어떤 Object/Field에 접근해야 하는지 설계한다.
-  3. Lightning App에 어떤 화면·탭이 들어갈지 큰 구조를 그린다.
+  1. 어떤 사용자 역할이 있는지(CS 상담원, 영업 담당자, 관리팀 등) 정리한다.
+  2. 역할별로 어떤 Object에 접근해야 하는지 Permission Matrix(`08_SCREEN_SPEC.md` §7)로 정리한다.
+  3. Permission Matrix를 기준으로 역할별 Permission Set 설계안을 만든다.
+  4. Lightning App에 어떤 화면·탭이 들어갈지 큰 구조를 그린다.
 
 ### Week 2 — Permission Set · Lightning App 구성
 
-- **이번 주 목표:** Permission Set과 Lightning App을 실제로 만들고, Report 초안을 잡는다.
+- **이번 주 목표:** Permission Matrix를 기준으로 Permission Set과 Lightning App을 실제로 만들고,
+  Report 초안을 잡는다.
 - **왜 이 작업을 하는가:** 승우가 Week 2에 Object를 실제로 생성하므로, 그 즉시 권한을 걸어두지 않으면
   이후 팀원들이 테스트할 때 권한 문제로 막힐 수 있다.
 - **완성되어 있어야 하는 것**
-  - 생성된 Permission Set
+  - Permission Matrix대로 생성된 Permission Set
   - 구성된 Lightning App
   - Report 초안 목록
 - **누구와 협업해야 하는가:** 승우(생성된 Object 기준으로 권한 적용)
-- **먼저 읽어야 하는 문서:** `08_SCREEN_SPEC.md` §4
+- **먼저 읽어야 하는 문서:** `08_SCREEN_SPEC.md` §4·§7
 - **추천 구현 순서**
-  1. Week 1 설계안대로 Permission Set을 생성한다.
+  1. Week 1의 Permission Matrix·설계안대로 Permission Set을 생성한다.
   2. Lightning App에 화면·탭을 배치한다.
   3. `08_SCREEN_SPEC.md` §4의 Report 목록(Recommendation Status Summary 등)을 초안으로 만든다.
+
+### Mid Review(8/14) 체크포인트
+
+`03_PROJECT_GUIDE.md` §7.3의 시연 흐름 중 내가 책임지는 부분은 **Permission Set이 기본 Object에
+적용된 상태**다. Week 2까지 만든 Permission Set이 Store/Case/Recommendation 시연 흐름을 막지 않는지
+미리 확인해서, 다른 팀원이 Mid Review 리허설 중 권한 오류로 막히는 일이 없게 한다.
 
 ### Week 3 — Dashboard 완성 · QA 시작
 

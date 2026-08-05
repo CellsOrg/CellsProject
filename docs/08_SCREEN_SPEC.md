@@ -43,7 +43,7 @@
 | POS Usage | 최근 POS 지표 요약(LWC 또는 Related List) — Daily/Monthly Sales, Order/Refund Count 추이 |
 | Case | 관련 CS Ticket Related List — RootCause, Status, CreatedDate. Wrong Usage 반복 여부를 한눈에 보이게 정렬(최신순) |
 | Opportunity | 관련 Sales Activity Related List — Stage, Owner |
-| Recommendation | 이 매장에 대한 Recommendation Related List(또는 LWC) — Reason, Score, Action, Status. Pending 상태 강조 |
+| Recommendation | 이 매장에 대한 Recommendation Related List(또는 LWC) — Reason, Action, Status, CreatedDate. Pending 상태 강조 |
 | Step Summary | 최신 Step 활용 현황(LWC 또는 Related List) — LearningRate, ChecklistRate, ActiveUsers. Tongss Step MVP가 만들어낸 운영 데이터의 요약본이 여기 나타난다(`05_SYSTEM_ARCHITECTURE.md` §3.3) |
 | Quick Actions | "새 Case 등록", "새 Sales Activity 등록", "방문 기록(Follow-up 완료 처리)" |
 
@@ -78,9 +78,13 @@ List View로 직접 접근한다 — `02_USER_FLOW.md` §2와 동일한 목적�
 
 | Component | 내용 |
 |---|---|
-| List View (표준) | `Recommendation__c` List View — 필터: `OwnerId = 현재 사용자`, `Status__c = "Pending"`, 정렬: `Score__c` 내림차순 |
-| 목록 컬럼 | Store Name(Lookup 표시), Reason, Score, Action, CreatedDate |
+| List View (표준) | `Recommendation__c` List View — 필터: `OwnerId = 현재 사용자`, `Status__c = "Pending"`, 정렬: `CreatedDate` 내림차순(최신순) |
+| 목록 컬럼 | Store Name(Lookup 표시), Reason, Action, CreatedDate |
 | Quick Action | 목록에서 바로 Status 변경(Accepted/Dismissed) |
+
+**우선순위 판단 기준(MVP):** 이 List View는 `CreatedDate` 최신순으로만 정렬한다 — Score 같은 계산형
+우선순위는 MVP 범위에 없다(`04_DATA_MODEL.md` §5.6). Wrong Usage 반복이 몇 번인지 건수 기준으로
+보고 싶으면 Reports(§4)의 "Wrong Usage Repeat Stores"를 함께 확인한다.
 
 ### 데이터 출처
 `Recommendation__c` (Owner=현재 사용자, Status=Pending 조건)
@@ -93,8 +97,9 @@ List View로 직접 접근한다 — `02_USER_FLOW.md` §2와 동일한 목적�
 생성하는 Flow(`07_PROCESS_DIAGRAM.md` §1, §2)
 
 ### 관련 LWC
-표준 List View로 충분하면 LWC 없음. Score 기준 정렬/필터가 표준 List View로 부족할 경우
-`recommendationInbox`(커스텀 LWC)로 보완 — 1차는 표준으로 시도(Declarative First, `03_PROJECT_GUIDE.md` §3.1).
+표준 List View로 충분하다 — `CreatedDate` 정렬은 List View가 기본 지원하므로 커스텀 LWC가 필요 없다
+(Declarative First, `03_PROJECT_GUIDE.md` §3.1). Wrong Usage 반복 건수처럼 Object에 없는 값 기준으로
+정렬해야 하는 요구가 생기면 그때 `recommendationInbox`(커스텀 LWC)를 검토한다 — Future Scope.
 
 ---
 
@@ -258,6 +263,26 @@ Home → Accounts → Cases → Opportunities → POS Usage → Recommendations 
 
 ---
 
+## 7. Permission Matrix
+
+"누가 무엇을 볼 수 있는가"를 한 표로 정리했다. 실제 Permission Set 구현 상세(Object/Field 단위 CRUD,
+Sharing Rule 등)는 혜준(Platform/QA Lead)이 관리하지만, 이 표는 그 전에 팀 전체가 같은 그림을 보기
+위한 **단순화된 버전**이다 — Salesforce의 정식 Field-Level Security 표가 아니다.
+
+| User | Account | Case | Opportunity | Recommendation | Dashboard |
+|---|---|---|---|---|---|
+| 박세일즈(영업 담당자) | 조회 | 조회 | 조회·생성·수정(본인 소유 건) | 조회·상태 변경(본인 소유 건) | 없음 |
+| CS 상담원 | 조회 | 조회·생성·수정 | 없음 | 없음 | 없음 |
+| Sara·승우·혜준(관리팀) | 전체 조회 | 전체 조회 | 전체 조회 | 전체 조회 | 조회·관리 |
+
+- **박세일즈**는 본인이 담당하는 매장·본인 소유 Recommendation/Opportunity만 만들고 바꿀 수 있다 —
+  다른 담당자 건까지 손대지 않는다.
+- **CS 상담원**은 Case를 직접 다루지만 영업 관련 Object(Opportunity, Recommendation)는 볼 필요가 없다.
+- **관리팀**은 전체를 조회해 Dashboard(§3)로 현황을 파악하지만, 현장 레코드를 직접 생성·수정하지는 않는다.
+- 실제 Permission Set 설계·생성 일정은 `members/03_HYEJUN.md` Weekly Guide를 참조한다.
+
+---
+
 ## Related Documents
 
 - [`04_DATA_MODEL.md`](./04_DATA_MODEL.md) — 각 화면에 나오는 Object/Field의 유일한 진실
@@ -267,3 +292,4 @@ Home → Accounts → Cases → Opportunities → POS Usage → Recommendations 
 - [`data/SAMPLE_DATA.md`](./data/SAMPLE_DATA.md) — 이 화면을 채울 예시 데이터
 - [`data/DEMO_DATASETS.md`](./data/DEMO_DATASETS.md) — 이 화면들을 어떤 시나리오 순서로 시연하는지
 - [`members/00_SARA.md`](./members/00_SARA.md) — Tongss Step MVP 화면(이 문서 범위 밖) 담당
+- [`members/03_HYEJUN.md`](./members/03_HYEJUN.md) — Permission Matrix(§7)를 실제 Permission Set으로 구현하는 일정

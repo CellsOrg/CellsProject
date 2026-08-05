@@ -295,37 +295,54 @@ Salesforce 표준 기능으로 해결되는 것을 코드로 다시 만들지 �
 - Account, Case, Opportunity
 - Customer 360 Record Page
 - Dummy Data Import
+- **Tongss Step MVP 기본 화면(UI/Frontend) 구현**
 
 | 담당 | 이번 주 산출물 |
 |---|---|
-| Sara | Tongss Step MVP 화면 디자인, UX 설계 |
+| Sara | Tongss Step MVP 화면 디자인·UX 설계, **Tongss Step MVP 기본 화면(UI/Frontend) 구현** |
 | 승우 | Object 생성, Field 생성, Flow 1차 구현 |
 | 은영 | Slack Integration, Apex, LWC 기본 화면 |
 | 혜준 | Permission Set, Lightning App, Reports 초안 |
 | 아론 | Dummy Data 제작, Sample Data Import, Demo Data 검증 |
 
+> Tongss Step MVP는 Week 2 안에 기본 화면까지 구현하는 것이 목표다 — Week 3는 그 화면을 Customer 360과
+> **연동**하는 데 집중한다(§7.4).
+
 ### 7.3 Mid Review (8/14)
 
-**목표:** Demo 가능한 수준(Customer 360, Flow, Slack, Recommendation) 확보.
+**목표:** 팀 전체가 아래 흐름을 시연할 수 있는 상태를 만든다.
+
+```mermaid
+flowchart LR
+    A["Store"] --> B["Case 생성"]
+    B --> C["Recommendation 생성"]
+    C --> D["Customer360에서<br/>Recommendation 확인"]
+    D --> E["Tongss Step MVP<br/>연결 확인"]
+```
+
+각 팀원이 무엇을 완료해야 이 흐름이 가능한지는 각자의 Weekly Guide(`members/*.md`)의 "Mid Review
+체크포인트"를 참조한다. 마지막 단계(Tongss Step MVP 연결 확인)는 Week 3에 완료되는 정식 연동이
+아니라, 화면과 Salesforce가 원리적으로 연결될 수 있다는 것을 보여주는 **초기 연결 확인** 수준이면
+충분하다 — 정식 연동 완료는 Week 3(§7.4)의 목표다.
 
 - 구현 완료 여부 확인
 - 개발 범위 확정
 
 ### 7.4 Week 3 (8/17 ~ 8/21) — Tongss Step 연동
 
-**목표:** Tongss Step MVP와 Customer 360을 연결한다.
+**목표:** (Week 2에서 만든) Tongss Step MVP와 Customer 360의 **연동을 완료**한다.
 
 **주요 결과물**
-- Tongss Step MVP
+- Tongss Step MVP ↔ Customer 360 연동 완료
 - Step Summary 생성
 - Recommendation 생성
 - Slack Notification
 
 | 담당 | 이번 주 산출물 |
 |---|---|
-| Sara | Tongss Step MVP UI/Frontend 구현 |
+| Sara | Tongss Step MVP ↔ Customer 360 연동 지원(은영과 협업), 화면 수정 대응 |
 | 승우 | Step Summary Object, Recommendation Flow |
-| 은영 | Slack API, Apex, LWC 고도화 |
+| 은영 | **Tongss Step MVP REST API 연동**, Slack·화면 고도화 |
 | 혜준 | Dashboard, Reports, QA 시작 |
 | 아론 | Demo Script 작성, Business Validation |
 
@@ -340,7 +357,7 @@ Salesforce 표준 기능으로 해결되는 것을 코드로 다시 만들지 �
 |---|---|
 | Sara | UX 개선, Demo 최종 흐름 |
 | 승우 | Agentforce, Flow 안정화 |
-| 은영 | Integration 마무리 |
+| 은영 | 전체 Integration 안정화(Tongss Step MVP·Slack 연동 버그 수정) |
 | 혜준 | QA, UAT, Deployment 준비 |
 | 아론 | PPT, 발표 스토리, Demo 리허설 |
 
@@ -381,7 +398,9 @@ Task는 GitHub Projects에서 관리한다 — §5. 이 표는 "해야 할 일(T
   고치고, `10_DECISIONS.md`에 기록한다. 새 역할 이름이 생기면 §3 Role Glossary에도 추가한다.
 - Epic/스코프 내용은 `00_PRODUCT_GUIDE.md`, 오브젝트/필드는 `04_DATA_MODEL.md`, 폴더 구조는
   `09_PROJECT_TREE.md`를 참조한다.
-- 일정이 바뀌면 이 문서 §7과 `00_PRODUCT_GUIDE.md` §6.1을 함께 고치고, 왜 바뀌었는지 `10_DECISIONS.md`에 남긴다.
+- 일정이 바뀌면 **이 문서 §7만** 고친다 — 일정의 Single Source of Truth는 이 문서다. 날짜(Week 구간,
+  중간점검, 제출일, Demo Day)가 바뀌면 `00_PRODUCT_GUIDE.md` §6.1의 요약 문장도 함께 확인한다. 왜
+  바뀌었는지는 `10_DECISIONS.md`에 남긴다.
 - Task/Sprint/Progress/Bug/Review를 이 문서나 `members/`에 만들지 않는다 — GitHub Projects가 원천이다(§5).
 
 ---
