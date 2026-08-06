@@ -142,7 +142,7 @@ Settlement / Campaign Performance / Sponsor Performance
 
 | Business Entity | Salesforce Object 제안 |
 |---|---|
-| Fan | Standard — Contact (또는 Person Account) |
+| Fan | Standard — Person Account(확정)) |
 | Player | Standard — Contact (Role/RecordType으로 구분) |
 | Staff | Standard — User |
 | Partner Contact | Standard — Contact |
